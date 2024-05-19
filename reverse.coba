@@ -1,0 +1,26 @@
+// package main
+
+// import "fmt"
+
+// func main() {
+// 	var userInput string
+// 	fmt.Print("Input : ")
+// 	fmt.Scan(&userInput)
+
+// 	fmt.Println("Output : ", checkString(userInput))
+// }
+
+// func checkString(userInput string) string {
+// 	if len(userInput) > 3 {
+// 		return reverse(userInput)
+// 	} else {
+// 		return userInput
+// 	}
+// }
+
+// func reverse(s string) (result string) {
+// 	for _, v := range s {
+// 		result = string(v) + result
+// 	}
+// 	return result
+// }
