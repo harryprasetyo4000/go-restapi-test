@@ -15,6 +15,7 @@ func main() {
 	r.POST("/api/product", productcontroller.Create)
 	r.PUT("/api/product/:id", productcontroller.Update)
 	r.DELETE("/api/product", productcontroller.Delete)
+	r.POST("/testing/upstream", productcontroller.TestingUp)
 
 	r.Run(":8080")
 }

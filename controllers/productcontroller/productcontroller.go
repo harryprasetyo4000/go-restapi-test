@@ -1,8 +1,11 @@
 package productcontroller
 
 import (
+	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 	"time"
@@ -141,6 +144,50 @@ func Delete(c *gin.Context) {
 
 	// JIKA TIDAK ERROR MENAMPILKAN DATA
 	c.JSON(http.StatusOK, gin.H{"message": "DELETE Succesfully"})
+
+	// END CODE
+	defer func() {
+		endTime := time.Now()
+		CreateAndInsertApiLog(c, startTime, endTime)
+	}()
+}
+
+func TestingUp(c *gin.Context) {
+	startTime := time.Now()
+	// START CODE
+
+	requestBody := []byte(`{"noReference": "value", "accountNum": "value"}`)
+
+	client := http.Client{}
+
+	req, err := http.NewRequest("POST", "https://service.synxchro.co.id/raya/dompetraya", bytes.NewBuffer(requestBody))
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Error creating request", "details": err.Error()})
+		return
+	}
+
+	// BASE64
+	encodedString := base64.StdEncoding.EncodeToString([]byte("user-test-01:P@ssw0rd"))
+
+	req.Header.Set("Authorization", encodedString)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Error sending request", "details": err.Error()})
+		return
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	responseBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Error reading response body", "details": err.Error()})
+		return
+	}
+
+	// JIKA TIDAK ERROR MENAMPILKAN DATA
+	c.JSON(http.StatusOK, gin.H{"status": resp.Status, "body": string(responseBody)})
 
 	// END CODE
 	defer func() {
